@@ -17,10 +17,7 @@ app.use(bodyParser.urlencoded({
 
 app.use('/:id', express.static(path.resolve(__dirname, '..', 'client', 'dist')));
 
-
-
-app.get('/popular/:id', (req, res) => {
-  console.log("/popular REQ")                   
+app.get('/popular/:id', (req, res) => {                  
   db.Dish.find({ restuarantID: req.params.id }).limit(10).exec((err, Dish) => {
     if (err) {
       console.log(err);
@@ -32,32 +29,56 @@ app.get('/popular/:id', (req, res) => {
 });
 
 app.post('/popular/:id', async (req, res) => {
+  let success = await initDish()
+  res.send(success);
+})
+app.put('/popular/:id', async (req, res) => {
+  let id = req.params;
+  let success = await initDish(id);
+  res.send(success);
+})
+app.delete('/popular/:id', async (req, res) => {
   //TODO
-  //shape
+  try {
+    let itemId = req.params.id;
+    let success = await db.Dish.deleteOne({_id:itemId})
+    res.send(success)
+  } catch (err) {
+    if (err) {
+      console.error(err)
+      res.end()
+    }
+  }
+})
+
+async function initDish(data) {
+  let success = undefined;
   var names = Faker.lorem.word;
 
-  var dish = new db.Dish ({
-    name: names(),
-    price: 100,
-    revCount: 100,
-    phoCount: 300,
-    image: "URL",
-    restuarantID: 43
-  });
-  //save
-  let receipt = await dish.save();
-  res.send(receipt);
-})
-app.put('/popular/:id', (req, res) => {
-  //TODO
-  let id = req.params;
-  db.findOneAndUpdate({restaurantID:id})
-  res.end()
-})
-app.delete('/popular/:id', (req, res) => {
-  //TODO
-  let id = req.params;
-  db.deleteOne({restaurantID:id})
-  res.end()
-})
+  if(data) {
+    let id = data;
+    let dish = new db.Dish({
+      name: names(),
+      price: 100,
+      revCount: 100,
+      phoCount: 300,
+      imate: "URL",
+      restaurantID: id
+    })
+    success = dish;
+  } else {
+    let dish = new db.Dish({
+      name: names(),
+      price: 100,
+      revCount: 100,
+      phoCount: 300,
+      imate: "URL",
+      restaurantID: 0
+    })
+    success = dish;
+  }
+
+  return success;
+}
+
 app.listen(port,() => console.log(`Example app listening on port ${port}!`));
