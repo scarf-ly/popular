@@ -31,7 +31,7 @@ const client = new Client({
 })
 client.connect(); 
 //connect to redis process client
-const redisClient = redis.createClient();
+// const redisClient = redis.createClient();
 
 //ROUTES
 //serve static resources at /:id
