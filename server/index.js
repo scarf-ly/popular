@@ -28,6 +28,9 @@ const client = new Client({
   port: 5432,
 })
 // client.connect(); 
+app.get('/test', () => {
+  res.send('Hello, World');
+});
 
 //get popular dish by restaurant id
 app.get('/popular/:id',fetchDish);
