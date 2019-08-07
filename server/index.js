@@ -16,12 +16,10 @@ const { Pool, Client } = require('pg')
 var app = express();
 //assign port
 const port = 3002;
-//init moddleware
-// app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({
+  // extended: true,
+// }));
 //init PG Client and connect
 const client = new Client({
   user: 'jacksongalan',
@@ -29,20 +27,10 @@ const client = new Client({
   database: 'popularDishes',
   port: 5432,
 })
-client.connect(); 
-//connect to redis process client
-// const redisClient = redis.createClient();
+// client.connect(); 
 
-//ROUTES
-//serve static resources at /:id
-// app.use('/:id', express.static(path.resolve(__dirname, '..', 'client', 'dist')));//values after : appear in req.params
-//test -- server can respond to a request
-app.get('/test', (req, res) => {
-    res.send("TEST!");
-});
 //get popular dish by restaurant id
 app.get('/popular/:id',fetchDish);
-//handle web requests
 
 async function fetchDish(req, res) {
   //grab id from URL
