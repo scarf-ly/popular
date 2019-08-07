@@ -14,12 +14,14 @@ var popularDish = new mongoose.Schema({
 var Dish = mongoose.model('Dish', popularDish);
 
 var seed = function seedData() {
-    var ranNum = function getRandomInt(max) {
+
+  var ranNum = function getRandomInt(max) {
         return Math.floor(Math.random() * Math.floor(max));
-      };
+  };
+
   for (let i = 1; i < 100; i++) {
     var names = faker.lorem.word;
-    var image1 = `https://popularlist.s3-us-west-1.amazonaws.com/munch${ranNum(100)}.jpg`;
+    var image1 = `https://popularlist.s3-us-w¬est-1.amazonaws.com/munch${ranNum(100)}.jpg`;
 
     var popDish = new Dish ({
         name: names(),
@@ -29,20 +31,11 @@ var seed = function seedData() {
         image: image1,
         restuarantID: `${i}`
     });
+
     popDish.save(function (err){
       if (err) return console.error(err);
-      console.log('saved')
-    });
-  }
+    })
+  };
 };
-seed();
-seed();
-seed();
-seed();
-seed();
-seed();
-seed();
-seed();
-seed();
-seed();
+
 module.exports.Dish = Dish

@@ -4,11 +4,11 @@
   "description": "Popular dishes list.  That will scroll and list out the menu items and prices.",
   "main": "index.js",
   "scripts": {
-    "server": "node ./server/index.js",
+    "server": "nodemon ./server/index.js",
     "test1": "jest",
     "react-dev": "webpack -p --watch",
     "seed": "node ./database/seed.js",
-    "start": "npm run server && npm run seed"
+    "start": "npm run server"
   },
   "repository": {
     "type": "git",
@@ -43,8 +43,10 @@
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.2",
+    "faker": "^4.1.0",
     "jest": "^24.8.0",
     "jest-css-modules": "^2.1.0",
+    "nodemon": "^1.19.1",
     "style-loader": "^0.23.1",
     "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5"
@@ -53,13 +55,15 @@
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "faker": "^4.1.0",
     "http-proxy": "^1.17.0",
     "jest-environment-enzyme": "^7.0.2",
     "jquery": "^3.4.1",
     "mongoose": "^5.6.4",
     "morgan": "^1.9.1",
+    "newrelic": "^5.11.0",
+    "pg": "^7.12.0",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "redis": "^2.8.0"
   }
 }

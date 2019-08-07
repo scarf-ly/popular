@@ -1,84 +1,66 @@
+const newrelic = require('newrelic');
+//SERVER - Express
 const express = require('express');
+//NOode - Path
 const path = require('path');
-const morgan = require('morgan');
+//Logger - Morgan
+// const morgan = require('morgan');
+//Request - Parser
 const bodyParser = require('body-parser');
-const db = require('../database/seed.js');
-const Faker = require("faker");
+//PG Interface(s)
+const { Pool, Client } = require('pg')
+//Caching agent - Redis
+const redis = require('redis');
 
+//init serv
 var app = express();
-
+//assign port
 const port = 3002;
-
-app.use(morgan('dev'));
+//init moddleware
+// app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
+//init PG Client and connect
+const client = new Client({
+  user: 'jacksongalan',
+  host: 'localhost',
+  database: 'popularDishes',
+  port: 5432,
+})
+client.connect(); 
+//connect to redis process client
+const redisClient = redis.createClient();
 
-app.use('/:id', express.static(path.resolve(__dirname, '..', 'client', 'dist')));
-
-app.get('/popular/:id', (req, res) => {                  
-  db.Dish.find({ restuarantID: req.params.id }).limit(10).exec((err, Dish) => {
-    if (err) {
-      console.log(err);
-      res.sendStatus(500);
-    } else {
-      res.send(Dish);
-    }
-  });
+//ROUTES
+//serve static resources at /:id
+// app.use('/:id', express.static(path.resolve(__dirname, '..', 'client', 'dist')));//values after : appear in req.params
+//test -- server can respond to a request
+app.get('/test', (req, res) => {
+    res.send("TEST!");
 });
+app.get('/test1', (req, res) => {
+  res.send("TEST!");
+});
+//get popular dish by restaurant id
+app.get('/popular/:id',fetchDish);
+//handle web requests
 
-app.post('/popular/:id', async (req, res) => {
-  let success = await initDish()
-  res.send(success);
-})
-app.put('/popular/:id', async (req, res) => {
-  let id = req.params;
-  let success = await initDish(id);
-  res.send(success);
-})
-app.delete('/popular/:id', async (req, res) => {
-  //TODO
-  try {
-    let itemId = req.params.id;
-    let success = await db.Dish.deleteOne({_id:itemId})
-    res.send(success)
-  } catch (err) {
-    if (err) {
-      console.error(err)
-      res.end()
-    }
+async function fetchDish(req, res) {
+  //grab id from URL
+  let id = req.params.id;//grabs value
+  //populate query fields
+  const query = {
+    name: 'fetch-dish',
+    text: `SELECT * FROM dish WHERE restaurantid = $1`,
+    values: [id],
   }
-})
-
-async function initDish(data) {
-  let success = undefined;
-  var names = Faker.lorem.word;
-
-  if(data) {
-    let id = data;
-    let dish = new db.Dish({
-      name: names(),
-      price: 100,
-      revCount: 100,
-      phoCount: 300,
-      imate: "URL",
-      restaurantID: id
-    })
-    success = dish;
-  } else {
-    let dish = new db.Dish({
-      name: names(),
-      price: 100,
-      revCount: 100,
-      phoCount: 300,
-      imate: "URL",
-      restaurantID: 0
-    })
-    success = dish;
-  }
-
-  return success;
-}
+  //perform query
+  let receipt = await client.query(query);
+  console.log(receipt.rows[0]);
+  //confirm success
+  res.end();
+};
 
 app.listen(port,() => console.log(`Example app listening on port ${port}!`));
