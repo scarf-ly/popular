@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 //PG Interface(s)
 const { Pool, Client } = require('pg')
 //Caching agent - Redis
-const redis = require('redis');
+// const redis = require('redis');
 
 //init serv
 var app = express();
@@ -39,9 +39,6 @@ const redisClient = redis.createClient();
 //test -- server can respond to a request
 app.get('/test', (req, res) => {
     res.send("TEST!");
-});
-app.get('/test1', (req, res) => {
-  res.send("TEST!");
 });
 //get popular dish by restaurant id
 app.get('/popular/:id',fetchDish);
