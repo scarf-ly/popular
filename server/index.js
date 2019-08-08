@@ -22,13 +22,13 @@ const port = 3002;
 // }));
 //init PG Client and connect
 const client = new Client({
-  user: 'jacksongalan',
-  host: 'localhost',
-  database: 'popularDishes',
+  user: 'compster',
+  host: 'ec2-18-221-161-158.us-east-2.compute.amazonaws.com',
+  database: 'popDish',
   port: 5432,
 })
-// client.connect(); 
-app.get('/test', () => {
+client.connect(); 
+app.get('/test', (req, res) => {
   res.send('Hello, World');
 });
 
